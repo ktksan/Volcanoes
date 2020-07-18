@@ -68,11 +68,11 @@ public class VolcanoRasterizer implements WorldRasterizerPlugin {
                         Vector3i chunkBlockPosition2 = new Vector3i(i, j, k).add(basePosition);
                         if (chunk.getRegion().encompasses(chunkBlockPosition2)) {
                             switch (blockInfo.block) {
-                                case LAVA: chunk.setBlock(ChunkMath.calcBlockPos(chunkBlockPosition2), lava);
+                                case LAVA: chunk.setBlock(ChunkMath.calcRelativeBlockPos(chunkBlockPosition2), lava);
                                 break;
-                                case SLATE: chunk.setBlock(ChunkMath.calcBlockPos(chunkBlockPosition2), slate);
+                                case SLATE: chunk.setBlock(ChunkMath.calcRelativeBlockPos(chunkBlockPosition2), slate);
                                 break;
-                                case BASALT: chunk.setBlock(ChunkMath.calcBlockPos(chunkBlockPosition2), basalt);
+                                case BASALT: chunk.setBlock(ChunkMath.calcRelativeBlockPos(chunkBlockPosition2), basalt);
                             }
                         }
                     }
