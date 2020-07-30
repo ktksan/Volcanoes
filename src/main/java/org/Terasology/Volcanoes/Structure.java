@@ -4,7 +4,4 @@
 package org.Terasology.Volcanoes;
 
 public class Structure {
-    public int getExtent() {
-        return 4;
-    }
 }

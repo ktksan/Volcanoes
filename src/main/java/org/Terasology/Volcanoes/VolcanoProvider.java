@@ -13,6 +13,7 @@ import org.terasology.utilities.procedural.WhiteNoise;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.FacetBorder;
+import org.terasology.world.generation.FacetProvider;
 import org.terasology.world.generation.FacetProviderPlugin;
 import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
@@ -22,13 +23,13 @@ import org.terasology.world.generation.facets.SurfaceHeightFacet;
 import org.terasology.world.generation.facets.base.BaseFieldFacet2D;
 import org.terasology.world.generator.plugin.RegisterPlugin;
 
-@RegisterPlugin
+//@RegisterPlugin
 @Requires({
         @Facet(value = SurfaceHeightFacet.class, border = @FacetBorder(sides = Volcano.MAXWIDTH / 2)),
         @Facet(value = SeaLevelFacet.class, border = @FacetBorder(sides = Volcano.MAXWIDTH / 2))
 })
 @Produces(VolcanoFacet.class)
-public class VolcanoProvider implements FacetProviderPlugin {
+public class VolcanoProvider implements FacetProvider {
     private Noise noise;
 
     @Override

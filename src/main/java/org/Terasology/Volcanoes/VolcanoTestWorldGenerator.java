@@ -23,7 +23,7 @@ import org.terasology.world.generation.WorldBuilder;
 import org.terasology.world.generator.RegisterWorldGenerator;
 import org.terasology.world.generator.plugin.WorldGeneratorPluginLibrary;
 
-@RegisterWorldGenerator(id = "VolcanoTestFlat", displayName = "VolcanoTestFlat")
+//@RegisterWorldGenerator(id = "VolcanoTestFlat", displayName = "VolcanoTestFlat")
 public class VolcanoTestWorldGenerator extends BaseFacetedWorldGenerator {
     @In
     private WorldGeneratorPluginLibrary worldGeneratorPluginLibrary;
@@ -38,8 +38,10 @@ public class VolcanoTestWorldGenerator extends BaseFacetedWorldGenerator {
                 .addProvider(new SurfaceProvider())
                 .addProvider(new SeaLevelProvider(0))
                 .addProvider(new VolcanoProvider())
+                .addProvider(new StructureProvider())
                 .addRasterizer(new SurfaceRasterizer())
                 .addRasterizer(new VolcanoRasterizer())
+                .addRasterizer(new StructureRasterizer())
                 .addPlugins();
     }
 

@@ -3,7 +3,6 @@
 
 package org.Terasology.Volcanoes;
 
-import com.google.common.collect.Maps;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.prefab.PrefabManager;
 import org.terasology.math.ChunkMath;
@@ -17,99 +16,52 @@ import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.chunks.CoreChunk;
 import org.terasology.world.generation.Region;
-import org.terasology.world.generation.WorldRasterizer;
+import org.terasology.world.generation.WorldRasterizerPlugin;
+import org.terasology.world.generator.plugin.RegisterPlugin;
+import org.terasology.world.generator.plugin.WorldGeneratorPluginLibrary;
 
 import java.util.Map;
+import java.util.Objects;
 
-public class StructureRasterizer implements WorldRasterizer {
+@RegisterPlugin
+public class StructureRasterizer implements WorldRasterizerPlugin {
     @In
-    PrefabManager prefabManager;
+    private WorldGeneratorPluginLibrary worldGeneratorPluginLibrary;
+
+    Prefab structure;
 
     @Override
     public void initialize() {
-
+        structure = Objects.requireNonNull(CoreRegistry.get(PrefabManager.class)).getPrefab("Volcanoes:dungeonBedroom");
     }
 
     @Override
     public void generateChunk(CoreChunk chunk, Region chunkRegion) {
         StructureFacet structureFacet = chunkRegion.getFacet(StructureFacet.class);
 
-            /*
-            BlockRegionTransform transformation = event.getTransformation();
-
-        Map<Vector3i, Block> blocksToPlace = Maps.newHashMap();
-
-        for (RegionToFill regionToFill : spawnBlockRegionsComponent.regionsToFill) {
-            Block block = regionToFill.blockType;
-            if (entity.hasComponent(IgnoreAirBlocksComponent.class) && isAir(block)) {
-                continue;
-            }
-
-            Region3i region = regionToFill.region;
-            region = transformation.transformRegion(region);
-            block = transformation.transformBlock(block);
-
-            for (Vector3i pos : region) {
-                blocksToPlace.put(pos, block);
-            }
-        }
-
-        worldProvider.setBlocks(blocksToPlace);
-             */
-        Prefab structure = prefabManager.getPrefab("GooeysQuests:FireNIceRoom");
-        SpawnBlockRegionsComponent spawnBlockRegionsComponent = structure.getComponent(SpawnBlockRegionsComponent.class);
+        SpawnBlockRegionsComponent spawnBlockRegionsComponent =
+                structure.getComponent(SpawnBlockRegionsComponent.class);
 
 
         for (Map.Entry<BaseVector3i, Structure> entry : structureFacet.getWorldEntries().entrySet()) {
-            // there should be a house here
-            // create a couple 3d regions to help iterate through the cube shape, inside and out
-            Vector3i centerHousePosition = new Vector3i(entry.getKey());
-/*
-            int extent = entry.getValue().getExtent();
-            centerHousePosition.add(0, extent, 0);
-            Region3i walls = Region3i.createFromCenterExtents(centerHousePosition, extent);
-            Region3i inside = Region3i.createFromCenterExtents(centerHousePosition, extent - 1);
-
-            // loop through each of the positions in the cube, ignoring the inside
-            for (Vector3i newBlockPosition : walls) {
-                if (chunkRegion.getRegion().encompasses(newBlockPosition)
-                        && !inside.encompasses(newBlockPosition)) {
-                    chunk.setBlock(ChunkMath.calcRelativeBlockPos(newBlockPosition), stone);
-                }
-            }
-
-            */
-            //................
-
-
-//            Map<Vector3i, Block> blocksToPlace = Maps.newHashMap();
+            Vector3i basePosition = new Vector3i(entry.getKey());
 
             for (SpawnBlockRegionsComponent.RegionToFill regionToFill : spawnBlockRegionsComponent.regionsToFill) {
-                    Block block = regionToFill.blockType;
-                    if (isAir(block)) {
-                        continue;
-                    }
-
-                    Region3i region = regionToFill.region;
-                    region.min().add(centerHousePosition);
-               // region = transformation.transformRegion(region);
-              //  block = transformation.transformBlock(block);
+                Block block = regionToFill.blockType;
+                if (isAir(block)) {
+                    continue;
+                }
+                Region3i region = regionToFill.region;
                 for (Vector3i pos : region) {
-                    //blocksToPlace.put(pos, block);
+                    pos.add(basePosition);
                     if (chunkRegion.getRegion().encompasses(pos)) {
                         chunk.setBlock(ChunkMath.calcRelativeBlockPos(pos), block);
                     }
                 }
             }
-
-            //worldProvider.setBlocks(blocksToPlace);
-            //...........
-
         }
     }
-    public Region3i transformRegion(Region3i region) {
-        return Region3i.createBounded((region.min()), (region.max()));
-    }
+
     private boolean isAir(final Block block) {
         return block.getURI().getBlockFamilyDefinitionUrn().equals(BlockManager.AIR_ID.getBlockFamilyDefinitionUrn());
     }
