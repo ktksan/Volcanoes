@@ -48,9 +48,9 @@ public class StructureRasterizer implements WorldRasterizerPlugin {
 
             for (SpawnBlockRegionsComponent.RegionToFill regionToFill : spawnBlockRegionsComponent.regionsToFill) {
                 Block block = regionToFill.blockType;
-                if (isAir(block)) {
-                    continue;
-                }
+//                if (isAir(block)) {
+//                    continue;
+//                }
                 Region3i region = regionToFill.region;
                 for (Vector3i pos : region) {
                     pos.add(basePosition);
